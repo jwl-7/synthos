@@ -4,7 +4,7 @@ import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 import SearchPanel from '@/components/SearchPanel/SearchPanel'
 import SearchResults from '@/components/SearchResults/SearchResults'
 import clsx from 'clsx'
-import pdfKbData from '@/data/pdf_kb.json'
+import pdfKbData from '@/data/synthetic.json'
 
 export default function AppController() {
     const [query, setQuery] = useState<string>('')
