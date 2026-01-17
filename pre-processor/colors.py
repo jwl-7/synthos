@@ -26,5 +26,9 @@ class Color(Enum):
     # keypress
     ENTER = f'{GRAY}[{YELLOW}ENTER{GRAY}]{RESET}'
 
+    # filetypes
+    PDF = f'{GRAY}[{CYAN}PDF{GRAY}]{RESET}'
+    JSON = f'{GRAY}[{CYAN}JSON{GRAY}]{RESET}'
+
     def __str__(self) -> str:
         return self.value

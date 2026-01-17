@@ -3,6 +3,8 @@
 This module pre-processes PDF books -> JSON embeddings for RAG db.
 """
 
+# pylint: disable=multiple-statements
+
 import json
 import os
 import re
@@ -14,11 +16,51 @@ import pymupdf
 import pymupdf4llm
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
+
 from colors import Color
 
 
 MODEL_NAME = 'all-mpnet-base-v2'
 
+
+def select_pdf() -> str|None:
+    """Prompt user to select PDF for processing."""
+    input(f'Press {Color.ENTER} to select a {Color.PDF} for processing...')
+
+    root = tkinter.Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    file_selection = filedialog.askopenfilename(
+        title='Select PDF',
+        filetypes=[('PDF files', '*.pdf')],
+        initialdir=os.getcwd()
+    )
+    root.destroy()
+
+    if not file_selection:
+        print(f'{Color.ERROR} No {Color.PDF} selected.')
+
+    return file_selection
+
+def select_json() -> str|None:
+    """Prompt user to select JSON export destination."""
+    input(f'Press {Color.ENTER} to select {Color.JSON} export...')
+
+    root = tkinter.Tk()
+    root.withdraw()
+    root.attributes('-topmost', True)
+    file_selection = filedialog.asksaveasfilename(
+        title='Save Knowledge Base As',
+        filetypes=[('JSON files', '*.json')],
+        defaultextension='.json',
+        initialfile='pdf_kb.json'
+    )
+    root.destroy()
+
+    if not file_selection:
+        print(f'{Color.ERROR} No {Color.JSON} selected.')
+
+    return file_selection
 
 def sanitize_text(text: str) -> str:
     """Sanitizes raw text extracted from PDF."""
@@ -46,43 +88,51 @@ def sanitize_text(text: str) -> str:
         text = text.replace(lig, rep)
 
     # text is non-alphanumeric noise
-    if not re.search(r'[a-zA-Z0-9]', text):
-        return ''
+    if not re.search(r'[a-zA-Z0-9]', text): text = ''
 
     # clean whitespace
-    return text.strip()
+    text = text.strip()
 
-def build_kb(file_path: str, output_path: str, model: SentenceTransformer):
-    """Converts PDF into a JSON-serialized vector database."""
+    if not text: print(f'{Color.ERROR} No valid content found.')
+    return text
 
-    # setup
-    embeddings = []
-    knowledge_base = []
-    filename = os.path.basename(file_path)
-    print(f'{Color.INFO} Reading {Color.CYAN}{filename}{Color.RESET}...')
-
-    # extract text from pdf file
-    raw_pdf = pymupdf.open(file_path)
-    raw_txt = pymupdf4llm.to_text(raw_pdf)
-
-    # sanitize extracted text
-    txt = sanitize_text(cast(str, raw_txt))
-
-    # split text into sentences by punctuation
-    raw_chunks = re.split(r'(?<=[.!?]) +', txt)
+def sentence_chunks(text: str) -> list[str]:
+    """Split text up into sentence chunks by punctuation."""
+    raw_chunks = re.split(r'(?<=[.!?]) +', text)
     chunks = [char.strip() for char in raw_chunks if len(char.strip()) > 30]
     print(f'{Color.INFO} Filtered out {Color.CYAN}{len(raw_chunks) - len(chunks)}{Color.RESET} noise chunks.')
 
-    # no data
-    if not chunks:
-        print(f'{Color.ERROR} No valid content found.')
-        return
+    if not chunks: print(f'{Color.ERROR} No valid content found.')
+    return chunks
+
+def vector_embeddings(chunks: list[str], model: SentenceTransformer) -> list[list[float]]:
+    """Generates normalized vector embeddings from sentence chunks."""
+    print(f'{Color.INFO} Found {Color.CYAN}{len(chunks)}{Color.RESET} chunks. Starting embedding...')
+    return [
+        model.encode(sentences=chunk, normalize_embeddings=True).tolist()
+        for chunk in tqdm(chunks, desc='Encoding', unit='chunk', bar_format='{l_bar}{bar:20}{r_bar}')
+    ]
+
+def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
+    """Converts PDF -> JSON-serialized vector database."""
+    knowledge_base = []
+    filename = os.path.basename(pdf_path)
+    print(f'{Color.INFO} Reading {Color.CYAN}{filename}{Color.RESET}...')
+
+    # extract text from pdf file
+    raw_pdf = pymupdf.open(pdf_path)
+    raw_txt = pymupdf4llm.to_text(raw_pdf)
+
+    # sanitize content
+    txt = sanitize_text(cast(str, raw_txt))
+    if not txt: return
+
+    # chunk text into sentences
+    chunks = sentence_chunks(txt)
+    if not chunks: return
 
     # generate normalized vector embeddings
-    print(f'{Color.INFO} Found {Color.CYAN}{len(chunks)}{Color.RESET} chunks. Starting embedding...')
-    for chunk in tqdm(chunks, desc='Encoding', unit='chunk', bar_format='{l_bar}{bar:20}{r_bar}'):
-        vector = model.encode(sentences=chunk, normalize_embeddings=True).tolist()
-        embeddings.append(vector)
+    embeddings = vector_embeddings(chunks, model)
 
     # construct knowledge base with embeddings
     for i, (chunk, vector) in enumerate(zip(chunks, embeddings)):
@@ -93,53 +143,36 @@ def build_kb(file_path: str, output_path: str, model: SentenceTransformer):
         })
 
     # export knowledge base as json
-    with open(file=output_path, mode='w', encoding='utf-8') as f:
+    with open(file=json_path, mode='w', encoding='utf-8') as f:
         json.dump(knowledge_base, f)
 
     # knowledge base constructed
-    output_filename = os.path.basename(output_path)
+    output_filename = os.path.basename(json_path)
     print(
         f'\n{Color.SUCCESS} Created {Color.CYAN}{output_filename}{Color.RESET} '
         f'from {Color.CYAN}{filename}{Color.RESET}'
     )
 
+def load_model(model_name: str) -> SentenceTransformer|None:
+    """Load AI model."""
+    print(f'{Color.INFO} Loading AI model {Color.CYAN}{model_name}{Color.RESET}...')
 
-if __name__ == '__main__':
-    # user file selection | PDF INPUT
-    input(f'Press {Color.ENTER} to select a PDF for processing...')
-    root = tkinter.Tk()
-    root.withdraw()
-    root.attributes('-topmost', True)
-    selected_file = filedialog.askopenfilename(
-        title='Select PDF',
-        filetypes=[('PDF files', '*.pdf')],
-        initialdir=os.getcwd()
-    )
+    try:
+        model = SentenceTransformer('flooba')
+    except Exception as _: # pylint: disable=broad-exception-caught
+        print(f'{Color.ERROR} Failed to load model {Color.CYAN}{model_name}{Color.RESET}...')
+        model = None
 
-    if not selected_file:
-        # no file selected
-        print(f'{Color.ERROR} Selection cancelled.')
-        root.destroy()
-    else:
-        # user file selection | PDF OUTPUT
-        print(f'{Color.INFO} Selected: {Color.CYAN}{os.path.basename(selected_file)}{Color.RESET}')
-        output_save_path = filedialog.asksaveasfilename(
-            title='Save Knowledge Base As',
-            defaultextension='.json',
-            filetypes=[('JSON files', '*.json')],
-            initialfile='pdf_kb.json'
-        )
-        root.destroy()
+    return model
 
-        if not output_save_path:
-            # no file selection
-            print(f'{Color.ERROR} Save location required. Exiting.')
-        else:
-            # load AI model and build embeddings
-            print(f'{Color.INFO} Loading AI model {Color.CYAN}{MODEL_NAME}{Color.RESET}...')
-            shared_model = SentenceTransformer(MODEL_NAME)
-            build_kb(selected_file, output_save_path, shared_model)
 
-            # embeddings created
-            print(f'{Color.SUCCESS} Processing Complete!')
-            input(f'\nPress {Color.ENTER} to exit...')
+def main():
+    """Does stuff."""
+    print(f'{Color.GRAY}.:.:.: {Color.YELLOW}PDF PreProcessor {Color.GRAY}:.:.:.{Color.RESET}')
+    pdf_file = select_pdf()
+    json_file = select_json() if pdf_file else None
+    model = load_model(MODEL_NAME) if json_file else None
+    if pdf_file and json_file and model: build_kb(pdf_file, json_file, model)
+    input(f'\nPress {Color.ENTER} to exit...')
+
+if __name__ == '__main__': main()
