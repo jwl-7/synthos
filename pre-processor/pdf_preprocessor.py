@@ -12,6 +12,7 @@ import tkinter
 from tkinter import filedialog
 from typing import cast
 
+import pymupdf.layout
 import pymupdf
 import pymupdf4llm
 from tqdm import tqdm
