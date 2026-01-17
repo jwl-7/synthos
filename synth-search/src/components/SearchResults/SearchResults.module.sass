@@ -1,0 +1,99 @@
+.searchResultsWrapper
+    width: 100%
+
+.searchResults
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    margin-top: 2rem
+
+.card
+    width: 100%
+    background: var(--glass-bg)
+    backdrop-filter: var(--glass-blur)
+    border: var(--glass-border)
+    border-radius: var(--radius-lg)
+    padding: 1.5rem
+    box-shadow: var(--glass-shadow)
+    transition: all 0.3s ease
+    animation: slide-in 0.4s ease-out
+
+    &:hover
+        transform: translateY(-2px)
+        box-shadow: var(--glass-shadow-hover)
+        border-color: rgba(255, 255, 255, 0.15)
+
+.code
+    width: 100%
+    background: rgba(0, 0, 0, 0.3)
+    border: 1px solid rgba(255, 255, 255, 0.05)
+    border-radius: var(--radius-sm)
+    padding: 1.25rem
+    overflow-x: auto
+    font-family: var(--font-mono)
+    font-size: 0.9rem
+    line-height: 1.6
+
+.matchScore
+    display: flex
+    justify-content: flex-start
+    margin-bottom: 1rem
+
+.matchBadge
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    padding: 0.5rem 1rem
+    background: rgba(255, 255, 255, 0.03)
+    border: 1px solid rgba(255, 255, 255, 0.1)
+    border-radius: var(--radius-sm)
+
+.matchPercent
+    font-weight: 700
+    font-size: 1.1rem
+
+.matchLabel
+    font-size: 0.7rem
+    color: var(--text-secondary)
+    letter-spacing: 0.1em
+
+@keyframes slide-in
+    from
+        opacity: 0
+        transform: translateY(15px)
+    to
+        opacity: 1
+        transform: translateY(0)
+
+.debugSources
+    // display: none
+    margin-top: 1.25rem
+    border-top: 1px solid #333
+    padding-top: 1rem
+
+.label
+    font-size: 0.8rem
+    color: #888
+    margin-bottom: 0.75rem
+    text-transform: uppercase
+
+.sourceItem
+    display: flex
+    gap: 0.75rem
+    align-items: center
+    margin-bottom: 0.75rem
+
+.scoreBadge
+    font-size: 0.7rem
+    background: #333
+    padding: 2px 6px
+    border-radius: 4px
+    font-weight: bold
+    color: hsl(var(--res-hue), 70%, 70%)
+
+.textPreview
+    margin: 0
+    font-size: 0.9rem
+    opacity: 0.8
+    line-height: 1.4
