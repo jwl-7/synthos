@@ -72,8 +72,8 @@ def merge_json_kb(json_input_paths: tuple[str], json_output_path: str):
         json.dump(combo_kb, f)
 
     print(
-        f'\n{Color.SUCCESS} Combined {Color.CYAN}{len(json_input_paths)}{Color.RESET} '
-        f'files into {Color.CYAN}{output_filename}{Color.RESET}'
+        f'\n{Color.SUCCESS} Combined {Color.CYAN}{len(json_input_paths)}{Color.RESET} files '
+        f'-> {Color.CYAN}{output_filename}{Color.RESET}'
     )
     print(f'{Color.INFO} Total entries: {len(combo_kb)}')
 
