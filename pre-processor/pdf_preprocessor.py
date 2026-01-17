@@ -158,7 +158,7 @@ def load_model(model_name: str) -> SentenceTransformer|None:
     print(f'{Color.INFO} Loading AI model {Color.CYAN}{model_name}{Color.RESET}...')
 
     try:
-        model = SentenceTransformer('flooba')
+        model = SentenceTransformer(MODEL_NAME)
     except Exception as _: # pylint: disable=broad-exception-caught
         print(f'{Color.ERROR} Failed to load model {Color.CYAN}{model_name}{Color.RESET}...')
         model = None
