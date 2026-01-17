@@ -1,7 +1,7 @@
-'''PDF Pre-Processor
+"""PDF Pre-Processor
 
 This module pre-processes PDF books -> JSON embeddings for RAG db.
-'''
+"""
 
 import json
 import os
@@ -21,7 +21,7 @@ MODEL_NAME = 'all-mpnet-base-v2'
 OUTPUT_FILENAME = 'pdf_kb.json'
 
 class Color(Enum):
-    '''Color enums for f-strings.'''
+    """Color enums for f-strings."""
     RED = '\033[91m'
     GREEN = '\033[92m'
     BLUE = '\033[94m'
@@ -40,7 +40,7 @@ class Color(Enum):
 
 
 def sanitize_text(text: str) -> str:
-    '''Sanitizes raw text extracted from PDF.'''
+    """Sanitizes raw text extracted from PDF."""
 
     # filter out OCR markers and figure captions
     artifacts_pattern = r'(-+\s*End of picture text\s*-+)|(Figure\s+\d+\.?)'
@@ -72,7 +72,7 @@ def sanitize_text(text: str) -> str:
 
 
 def build_kb(file_path: str, output_file: str, model: SentenceTransformer):
-    '''Converts PDF into a JSON-serialized vector database.'''
+    """Converts PDF into a JSON-serialized vector database."""
     embeddings = []
     knowledge_base = []
     filename = os.path.basename(file_path)
