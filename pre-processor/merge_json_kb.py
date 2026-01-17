@@ -67,10 +67,11 @@ def merge_json_kb(json_input_paths: tuple[str], json_output_path: str):
             data = json.load(f)
         combo_kb.extend(data)
 
-    output_filename = os.path.basename(json_output_path)
-    with open(file=output_filename, mode='w', encoding='utf-8') as f:
+    with open(file=json_output_path, mode='w', encoding='utf-8') as f:
         json.dump(combo_kb, f)
 
+    # knowledge bases merged
+    output_filename = os.path.basename(json_output_path)
     print(
         f'\n{Color.SUCCESS} Combined {Color.CYAN}{len(json_input_paths)}{Color.RESET} files '
         f'-> {Color.CYAN}{output_filename}{Color.RESET}'
