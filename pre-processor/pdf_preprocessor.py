@@ -71,6 +71,14 @@ def select_json(pdf_path: str) -> str|None:
 def sanitize_text(text: str) -> str:
     """Sanitizes raw text extracted from PDF."""
 
+    # filter OCR markers and figure captions
+    artifacts_pattern = r'(-+\s*End of picture text\s*-+)|(Figure\s+\d+\.?)'
+    text = re.sub(artifacts_pattern, '', text, flags=re.IGNORECASE)
+
+    # remove tables and ASCII
+    table_noise = r'([|+\-]{3,})|(\|(\s+\|)+)|([_]{3,})'
+    text = re.sub(table_noise, ' ', text)
+
     # de-hyphenate words split across lines
     text = re.sub(r'(\w+)-\s+(\w+)', r'\1\2', text)
 
@@ -99,6 +107,15 @@ def sentence_chunks(text: str) -> list[str]:
         # not enough real words
         words = re.findall(r'\b[a-zA-Z]{2,}\b', chunk)
         if len(words) < 5:
+            continue
+
+        # image|OCR artifacts
+        if re.search(r'(Start of picture|End of picture|\[\d+\s*x\s*\d+\])', chunk, re.IGNORECASE):
+            continue
+
+        # too many symbols|pipes
+        symbol_count = sum(char in '|~•._:;[]{}' for char in chunk)
+        if symbol_count > len(chunk) * 0.15:
             continue
 
         chunks.append(chunk)
