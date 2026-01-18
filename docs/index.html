@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Synthos</title>
+    <meta charset="utf-8">
+    <meta name="description" content="AI-Assistant for Sound Design" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+
+    <meta property="og:site_name" content="Synthos" />
+    <meta property="og:title" content="Synthos" />
+    <meta property="og:description" content="AI-Assistant for Sound Design" />
+    <meta property="og:image" content="/lua-semantic-search/favicon/android-chrome-512x512.png" />
+    <meta property="og:url" content="/lua-semantic-search/" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            --color-red: #ff6b6b;
+            --color-yellow: #ffd93d;
+            --color-green: #6bcf7f;
+            --color-blue: #4d96ff;
+            --color-purple: #9d4edd;
+            --color-pink: #ff006e;
+            --loader-size: 200px;
+            --ring-thickness: 20px;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-gradient);
+        }
+
+        .rainbow-loader {
+            display: inline-block;
+            position: relative;
+            width: var(--loader-size);
+            height: var(--loader-size);
+        }
+
+        .rainbow-loader div {
+            position: absolute;
+            opacity: 1;
+            border-radius: 50%;
+            animation: ripple 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+            background: conic-gradient(
+                from 0deg,
+                var(--color-red),
+                var(--color-yellow),
+                var(--color-green),
+                var(--color-blue),
+                var(--color-purple),
+                var(--color-pink),
+                var(--color-red)
+            );
+        }
+
+        .rainbow-loader div::before {
+            content: '';
+            position: absolute;
+            top: var(--ring-thickness);
+            left: var(--ring-thickness);
+            right: var(--ring-thickness);
+            bottom: var(--ring-thickness);
+            background: var(--bg-gradient);
+            border-radius: 50%;
+        }
+
+        .rainbow-loader div:nth-child(2) {
+            animation-delay: -0.66s;
+        }
+
+        .rainbow-loader div:nth-child(3) {
+            animation-delay: -1.33s;
+        }
+
+        @keyframes ripple {
+            0% {
+                top: calc(var(--loader-size) / 2 - 4px);
+                left: calc(var(--loader-size) / 2 - 4px);
+                width: 8px;
+                height: 8px;
+                opacity: 0;
+            }
+            4.9% {
+                top: calc(var(--loader-size) / 2 - 4px);
+                left: calc(var(--loader-size) / 2 - 4px);
+                width: 8px;
+                height: 8px;
+                opacity: 0;
+            }
+            5% {
+                top: calc(var(--loader-size) / 2 - 4px);
+                left: calc(var(--loader-size) / 2 - 4px);
+                width: 8px;
+                height: 8px;
+                opacity: 1;
+            }
+            100% {
+                top: 0;
+                left: 0;
+                width: var(--loader-size);
+                height: var(--loader-size);
+                opacity: 0;
+            }
+        }
+    </style>
+  <script type="module" crossorigin src="/synth-search/assets/index-BztRlHvL.js"></script>
+  <link rel="stylesheet" crossorigin href="/synth-search/assets/index-DY60sjvj.css">
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <div class="rainbow-loader">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</body>
+
+</html>
