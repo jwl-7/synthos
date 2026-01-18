@@ -136,7 +136,7 @@ def vector_embeddings(chunks: list[str], model: SentenceTransformer) -> list[lis
     print(f'{Color.INFO} Found {Color.CYAN}{len(chunks)}{Color.RESET} chunks. Starting embedding...')
     return [
         model.encode(sentences=chunk, normalize_embeddings=True).tolist()
-        for chunk in tqdm(chunks, desc='Encoding', unit='chunk', bar_format='{l_bar}{bar:20}{r_bar}')
+        for chunk in tqdm(chunks, desc='Encoding', unit='chunk', bar_format='{desc}: |{bar:40}| {n_fmt}/{total_fmt}')
     ]
 
 def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
