@@ -10,6 +10,7 @@ export default function SearchBar({ query, onQueryChange, modelReady }: SearchBa
     return (
         <div className={styles.searchBar}>
             <input
+                className={styles.searchInput}
                 type="text"
                 placeholder="Search"
                 autoFocus

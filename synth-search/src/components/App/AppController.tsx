@@ -3,14 +3,9 @@ import { useState } from 'react'
 import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 import SearchPanel from '@/components/SearchPanel/SearchPanel'
 import SearchResults from '@/components/SearchResults/SearchResults'
-import clsx from 'clsx'
 import cookbookData from '@/data/synth-cookbook.json'
 import secretsData from '@/data/synth-secrets.json'
-
-const KB_SOURCES = {
-    cookbook: cookbookData as JSON,
-    secrets: secretsData as JSON
-}
+import clsx from 'clsx'
 
 export default function AppController() {
     const [query, setQuery] = useState<string>('')

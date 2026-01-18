@@ -3,58 +3,35 @@
     display: flex
     flex-direction: column
     align-items: center
-    gap: 1.5rem
-    padding: 2.5rem 2rem
-    background: var(--glass-background)
-    backdrop-filter: var(--glass-blur)
-    border: var(--glass-border)
-    border-radius: var(--radius-lg)
-    box-shadow: var(--glass-shadow)
+    gap: 24px
+    padding: 40px 32px
+    background: var(--search-panel-bg)
+    backdrop-filter: var(--search-panel-blur)
+    border: 1px solid var(--search-panel-border)
+    border-radius: 16px
+    box-shadow: 0 8px 32px var(--search-panel-box-shadow)
+    transition: transform 0.2s ease, background 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.3s ease
+    animation: panel-entrance 0.5s cubic-bezier(0.16, 1, 0.3, 1)
+
+    &:hover
+        transform: translateY(-4px)
+        border-color: var(--search-results-border-hover)
+        box-shadow: 0 12px 40px var(--search-results-box-shadow-hover)
 
 .title
-    font-size: 2.5rem
-    font-weight: 700
-    letter-spacing: 0.05em
+    font-family: var(--title-font-family)
+    font-size: var(--title-font-size)
+    font-weight: var(--title-font-weight)
     margin: 0
     text-align: center
     background: var(--title-gradient)
     background-clip: text
-    color: var(--title-color)
+    color: var(--title-text)
 
-.toggleWrapper
-    position: relative
-    display: flex
-    padding: 4px
-    width: 240px
-    background: var(--toggle-wrapper-background)
-    border: var(--toggle-wrapper-border)
-    border-radius: 12px
-
-.toggleButton
-    flex: 1
-    z-index: 1
-    font-size: 0.8rem
-    font-weight: 600
-    padding: 8px 0
-    border: none
-    background: var(--toggle-button-background)
-    color: var(--text-muted)
-    cursor: pointer
-    transition: color 0.3s ease
-
-    &.active
-        color: white
-
-.slider
-    position: absolute
-    top: 4px
-    left: 4px
-    width: calc(50% - 4px)
-    height: calc(100% - 8px)
-    background: var(--slider-background)
-    border-radius: 8px
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
-    pointer-events: none
-
-    &.right
-        transform: translateX(100%)
+@keyframes panel-entrance
+    from
+        opacity: 0
+        transform: translateY(20px) scale(0.98)
+    to
+        opacity: 1
+        transform: translateY(0) scale(1)

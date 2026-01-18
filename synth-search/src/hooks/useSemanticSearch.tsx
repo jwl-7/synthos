@@ -13,7 +13,7 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                 const extractor = await pipeline('feature-extraction', 'Xenova/all-mpnet-base-v2')
                 const generator = await pipeline('text2text-generation', 'Xenova/Flan-T5-base')
                 setPipelines({ extractor, generator })
-            } catch (e) {
+            } catch(e) {
                 console.error('Model failed to initialize:', e)
             }
         }
@@ -49,20 +49,23 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                 let contextText = topResults.map(r => r.text).join(' ')
                     .replace(/\s+/g, ' ')
                     .trim()
-                if (!contextText) {
-                    contextText = topResults.map(r => r.text).join(' ')
-                }
 
-                const prompt = `Use the following context to answer the question briefly.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
+                query = 'What are the 3 waveforms?'
+                contextText = 'The 3 waveforms are yellow, schoolbus, and red power ranger.'
+                const prompt = `Context: ${contextText}\nQuestion: ${query}\nAnswer:`
+
+                // const prompt = `Use the following context to answer the question.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
                 const generatorOutput = await generator(prompt, {
-                    max_new_tokens: 96,
-                    repetition_penalty: 1.5,
-                    temperature: 0.25,
-                    do_sample: true
+                    max_new_tokens: 128,
+                    repetition_penalty: 1.1,
+                    // temperature: 0.1,
+                    // do_sample: true,
+                    // num_beams: 3,
+                    // early_stopping: true
                 })
                 const cleanAnswer = generatorOutput[0]?.generated_text?.trim() || 'No information found.'
                 setAnswer(cleanAnswer)
-            } catch (err) {
+            } catch(err) {
                 console.error('Search failed:', err)
                 setAnswer('Failed to process the query.')
             } finally {

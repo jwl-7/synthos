@@ -1,6 +1,6 @@
 import styles from './SearchPanel.module.sass'
 import SearchBar from '@/components/SearchBar/SearchBar'
-import clsx from 'clsx'
+import SearchToggle from '@/components/SearchToggle/SearchToggle'
 
 interface SearchPanelProps {
     query: string
@@ -20,22 +20,10 @@ export default function SearchPanel({
     return (
         <div className={styles.searchPanel}>
             <h1 className={styles.title}>Synthos</h1>
-            <div className={styles.toggleWrapper}>
-                <div className={clsx(styles.slider, activeSource === 'secrets' && styles.right)} />
-                <button
-                    className={clsx(styles.toggleButton, activeSource === 'cookbook' && styles.active)}
-                    onClick={() => onSourceChange('cookbook')}
-                >
-                    Cookbook
-                </button>
-                <button
-                    className={clsx(styles.toggleButton, activeSource === 'secrets' && styles.active)}
-                    onClick={() => onSourceChange('secrets')}
-                >
-                    Secrets
-                </button>
-            </div>
-
+            <SearchToggle
+                activeSource={activeSource}
+                onSourceChange={onSourceChange}
+            />
             <SearchBar
                 query={query}
                 onQueryChange={onQueryChange}

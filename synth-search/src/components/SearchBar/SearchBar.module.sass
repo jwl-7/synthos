@@ -1,3 +1,26 @@
 .searchBar
     position: relative
     width: 100%
+
+.searchInput
+    width: 100%
+    height: 56px
+    font-family: var(--search-bar-font-family)
+    font-size: var(--search-bar-font-size)
+    padding: 0 24px
+    background: var(--search-bar-bg)
+    border: 1px solid var(--search-bar-border)
+    border-radius: 12px
+    color: var(--text-primary)
+    outline: none
+    transition: all 0.3s ease
+
+    &::placeholder
+        color: var(--search-bar-placeholder)
+    &:focus
+        background: var(--search-bar-bg-focus)
+        border-color: var(--search-bar-border-focus)
+        box-shadow: 0 0 0 3px var(--search-bar-box-shadow-focus)
+    &:disabled
+        opacity: 0.5
+        cursor: not-allowed

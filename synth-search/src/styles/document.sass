@@ -6,33 +6,14 @@
 
 html
     font-family: var(--font-sans)
+    font-size: var(--font-size)
+    font-weight: var(--font-weightz)
 
 body
+    line-height: var(--line-height)
     margin: 0
     text-rendering: optimizeLegibility
     background-attachment: fixed
     background-image: var(--bg-image)
     background-size: cover
     color: var(--text-primary)
-
-input
-    width: 100%
-    height: 56px
-    font-size: 1rem
-    padding: 0 1.5rem
-    background: var(--input-background)
-    border: var(--input-border)
-    border-radius: var(--radius-md)
-    color: var(--text-primary)
-    outline: none
-    transition: all 0.3s ease
-
-    &::placeholder
-        color: var(--text-secondary)
-    &:focus
-        background: var(--input-background-focus)
-        border-color: var(--blue-accent)
-        box-shadow: var(--input-box-shadow-focus)
-    &:disabled
-        opacity: 0.5
-        cursor: not-allowed
