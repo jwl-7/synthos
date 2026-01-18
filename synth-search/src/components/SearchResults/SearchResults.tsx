@@ -26,7 +26,7 @@ export default function SearchResults({ answer, results, isSearching }: SearchRe
         return (
             <div className={styles.resultContainer}>
                 <div className={styles.scoreContainer}>
-                    <div className={styles.scoreBar}>
+                    <div className={styles.scoreBar} data-score={scorePercent}>
                         <div className={styles.scoreFill} style={scoreFillStyle}/>
                     </div>
                 </div>
