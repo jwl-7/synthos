@@ -50,18 +50,14 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                     .replace(/\s+/g, ' ')
                     .trim()
 
-                query = 'What are the 3 waveforms?'
-                contextText = 'The 3 waveforms are yellow, schoolbus, and red power ranger.'
-                const prompt = `Context: ${contextText}\nQuestion: ${query}\nAnswer:`
-
-                // const prompt = `Use the following context to answer the question.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
+                const prompt = `Answer the question using only the context provided. Be concise and accurate.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
                 const generatorOutput = await generator(prompt, {
-                    max_new_tokens: 128,
-                    repetition_penalty: 1.1,
-                    // temperature: 0.1,
-                    // do_sample: true,
-                    // num_beams: 3,
-                    // early_stopping: true
+                    max_new_tokens: 64,
+                    temperature: 0.7,
+                    do_sample: true,
+                    top_p: 0.9,
+                    repetition_penalty: 1.2,
+                    no_repeat_ngram_size: 3,
                 })
                 const cleanAnswer = generatorOutput[0]?.generated_text?.trim() || 'No information found.'
                 setAnswer(cleanAnswer)
