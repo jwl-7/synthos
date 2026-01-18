@@ -66,16 +66,22 @@ def select_json() -> str|None:
 def sanitize_text(text: str) -> str:
     """Sanitizes raw text extracted from PDF."""
 
+    # remove page numbers & headers
+    text = re.sub(r'Page\s+\d+\s+of\s+\d+', '', text, flags=re.IGNORECASE)
+
     # filter OCR markers and figure captions
     artifacts_pattern = r'(-+\s*End of picture text\s*-+)|(Figure\s+\d+\.?)'
     text = re.sub(artifacts_pattern, '', text, flags=re.IGNORECASE)
 
     # remove tables and ASCII
-    table_noise = r'([|+\-]{3,})|(\|(\s+\|)+)'
+    table_noise = r'([|+\-]{3,})|(\|(\s+\|)+)|([_]{3,})'
     text = re.sub(table_noise, ' ', text)
 
-    # remove table of content lines
+    # remove table of contents dots
     text = re.sub(r'\.{3,}', ' ', text)
+
+    # remove math/code symbols
+    text = re.sub(r'[<>=/\\*]{3,}', ' ', text)
 
     # de-hyphenate words split across lines
     text = re.sub(r'(\w+)-\s+(\w+)', r'\1\2', text)
@@ -100,9 +106,28 @@ def sanitize_text(text: str) -> str:
 def sentence_chunks(text: str) -> list[str]:
     """Split text up into sentence chunks by punctuation."""
     raw_chunks = re.split(r'(?<=[.!?]) +', text)
-    chunks = [char.strip() for char in raw_chunks if len(char.strip()) > 30]
-    print(f'{Color.INFO} Filtered out {Color.CYAN}{len(raw_chunks) - len(chunks)}{Color.RESET} noise chunks.')
+    chunks = []
 
+    for chunk in raw_chunks:
+        chunk = chunk.strip()
+
+        # too short
+        if len(chunk) < 40:
+            continue
+
+        # not enough letters
+        alphas = sum(char.isalpha() for char in chunk)
+        if alphas / len(chunk) < 0.5:
+            continue
+
+        # not enough real words
+        words = re.findall(r'\b[a-zA-Z]{3,}\b', chunk)
+        if len(words) < 3:
+            continue
+
+        chunks.append(chunk)
+
+    print(f'{Color.INFO} Filtered out {Color.CYAN}{len(raw_chunks) - len(chunks)}{Color.RESET} noise chunks.')
     if not chunks: print(f'{Color.ERROR} No valid content found.')
     return chunks
 
