@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { pipeline, cos_sim } from '@xenova/transformers'
 
-export function useSemanticSearch(query: string, kbData: KBEntry[]) {
+export function useSemanticSearch(query: string, kbData: KbData[]) {
     const [pipelines, setPipelines] = useState<{ extractor: any, generator: any } | null>(null)
     const [answer, setAnswer] = useState<string>('')
     const [results, setResults] = useState<SearchResult[]>([])
@@ -13,7 +13,7 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                 const extractor = await pipeline('feature-extraction', 'Xenova/all-mpnet-base-v2')
                 const generator = await pipeline('text2text-generation', 'Xenova/Flan-T5-base')
                 setPipelines({ extractor, generator })
-            } catch(e) {
+            } catch (e) {
                 console.error('Model failed to initialize:', e)
             }
         }
@@ -21,7 +21,7 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
     }, [])
 
     useEffect(() => {
-        if (!query.trim() || !pipelines) {
+        if (!query.trim() || !pipelines || kbData.length === 0) {
             setAnswer('')
             setResults([])
             setIsSearching(false)
@@ -61,7 +61,7 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                 })
                 const cleanAnswer = generatorOutput[0]?.generated_text?.trim() || 'No information found.'
                 setAnswer(cleanAnswer)
-            } catch(err) {
+            } catch (err) {
                 console.error('Search failed:', err)
                 setAnswer('Failed to process the query.')
             } finally {

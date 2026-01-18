@@ -1,4 +1,4 @@
-interface KBEntry {
+interface KbData {
     id: string
     text: string
     vector: number[]

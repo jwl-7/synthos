@@ -4,7 +4,7 @@ import SearchToggle from '@/components/SearchToggle/SearchToggle'
 
 interface SearchPanelProps {
     query: string
-    modelReady: boolean
+    isKbReady: boolean
     activeSource: string
     onQueryChange: (query: string) => void
     onSourceChange: (source: string) => void
@@ -12,7 +12,7 @@ interface SearchPanelProps {
 
 export default function SearchPanel({
     query,
-    modelReady,
+    isKbReady,
     activeSource,
     onQueryChange,
     onSourceChange
@@ -27,7 +27,7 @@ export default function SearchPanel({
             <SearchBar
                 query={query}
                 onQueryChange={onQueryChange}
-                modelReady={modelReady}
+                isKbReady={isKbReady}
             />
         </div>
     )

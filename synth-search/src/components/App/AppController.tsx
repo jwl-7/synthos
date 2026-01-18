@@ -1,18 +1,36 @@
 import styles from './AppController.module.sass'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 import SearchPanel from '@/components/SearchPanel/SearchPanel'
 import SearchResults from '@/components/SearchResults/SearchResults'
-import cookbookData from '@/data/synth-cookbook.json'
-import secretsData from '@/data/synth-secrets.json'
 import clsx from 'clsx'
 
 export default function AppController() {
     const [query, setQuery] = useState<string>('')
-    const [activeKB, setActiveKB] = useState<string>('cookbook')
-    const kbData = activeKB === 'cookbook' ? cookbookData : secretsData
-    const { answer, results, isSearching, modelReady } = useSemanticSearch(query, kbData as KBEntry[])
+    const [activeKb, setActiveKb] = useState<string>('cookbook')
+    const [kbData, setKbData] = useState<KbData[]>([])
+    const [isLoadingData, setIsLoadingData] = useState(false)
+
+    useEffect(() => {
+        const loadKb = async () => {
+            setIsLoadingData(true)
+            const fileName = activeKb === 'cookbook' ? 'synth-cookbook.json' : 'synth-secrets.json'
+            try {
+                const response = await fetch(`data/${fileName}`)
+                const data = await response.json()
+                setKbData(data)
+            } catch (e) {
+                console.error('Failed to load knowledge base:', e)
+            } finally {
+                setIsLoadingData(false)
+            }
+        }
+        loadKb()
+    }, [activeKb])
+
+    const { answer, results, isSearching, modelReady } = useSemanticSearch(query, kbData)
     const isActive = query.length > 0
+    const isKbReady = modelReady && !isLoadingData
 
     return (
         <div className={clsx(styles.appWrapper, isActive && styles.active)}>
@@ -20,9 +38,9 @@ export default function AppController() {
                 <SearchPanel
                     query={query}
                     onQueryChange={setQuery}
-                    modelReady={modelReady}
-                    activeSource={activeKB}
-                    onSourceChange={setActiveKB}
+                    isKbReady={isKbReady}
+                    activeSource={activeKb}
+                    onSourceChange={setActiveKb}
                 />
                 <SearchResults
                     answer={answer}
