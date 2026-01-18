@@ -117,12 +117,21 @@ def sentence_chunks(text: str) -> list[str]:
 
         # not enough letters
         alphas = sum(char.isalpha() for char in chunk)
-        if alphas / len(chunk) < 0.5:
+        if alphas / len(chunk) < 0.6:
             continue
 
         # not enough real words
         words = re.findall(r'\b[a-zA-Z]{3,}\b', chunk)
-        if len(words) < 3:
+        if len(words) < 5:
+            continue
+
+        # image|OCR artifacts
+        if re.search(r'(Start of picture|End of picture|\[\d+\s*x\s*\d+\])', chunk, re.IGNORECASE):
+            continue
+
+        # too many symbols|pipes
+        symbol_count = sum(char in '|~•._:;[]{}' for char in chunk)
+        if symbol_count > len(chunk) * 0.15:
             continue
 
         chunks.append(chunk)
