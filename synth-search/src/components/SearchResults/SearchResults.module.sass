@@ -2,19 +2,19 @@
     width: 100%
 
 .searchResults
-    width: 100%
     display: flex
     flex-direction: column
+    width: 100%
     gap: 1.5rem
     margin-top: 2rem
 
 .card
+    padding: 1.5rem
     width: 100%
-    background: var(--glass-bg)
+    background: var(--glass-background)
     backdrop-filter: var(--glass-blur)
     border: var(--glass-border)
     border-radius: var(--radius-lg)
-    padding: 1.5rem
     box-shadow: var(--glass-shadow)
     transition: all 0.3s ease
     animation: slide-in 0.4s ease-out
@@ -22,18 +22,7 @@
     &:hover
         transform: translateY(-2px)
         box-shadow: var(--glass-shadow-hover)
-        border-color: rgba(255, 255, 255, 0.15)
-
-.code
-    width: 100%
-    background: rgba(0, 0, 0, 0.3)
-    border: 1px solid rgba(255, 255, 255, 0.05)
-    border-radius: var(--radius-sm)
-    padding: 1.25rem
-    overflow-x: auto
-    font-family: var(--font-mono)
-    font-size: 0.9rem
-    line-height: 1.6
+        border-color: var(--glass-border-hover)
 
 .matchScore
     display: flex
@@ -43,10 +32,11 @@
 .matchBadge
     display: flex
     align-items: center
+    white-space: nowrap
     gap: 0.5rem
     padding: 0.5rem 1rem
-    background: rgba(255, 255, 255, 0.03)
-    border: 1px solid rgba(255, 255, 255, 0.1)
+    background: var(--match-badge-background)
+    border: var(--match-badge-border)
     border-radius: var(--radius-sm)
 
 .matchPercent
@@ -55,8 +45,8 @@
 
 .matchLabel
     font-size: 0.7rem
-    color: var(--text-secondary)
     letter-spacing: 0.1em
+    color: var(--text-secondary)
 
 @keyframes slide-in
     from
@@ -66,34 +56,19 @@
         opacity: 1
         transform: translateY(0)
 
-.debugSources
-    // display: none
+.topMatches
     margin-top: 1.25rem
-    border-top: 1px solid #333
-    padding-top: 1rem
+    padding-top: 0.5rem
+    border-top: var(--top-matches-border)
 
-.label
+.topMatchesLabel
     font-size: 0.8rem
-    color: #888
     margin-bottom: 0.75rem
+    color: var(--top-matches-label)
     text-transform: uppercase
 
-.sourceItem
+.topMatchesItem
     display: flex
-    gap: 0.75rem
     align-items: center
+    gap: 0.75rem
     margin-bottom: 0.75rem
-
-.scoreBadge
-    font-size: 0.7rem
-    background: #333
-    padding: 2px 6px
-    border-radius: 4px
-    font-weight: bold
-    color: hsl(var(--res-hue), 70%, 70%)
-
-.textPreview
-    margin: 0
-    font-size: 0.9rem
-    opacity: 0.8
-    line-height: 1.4

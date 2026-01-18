@@ -43,7 +43,7 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
 
                 const topResults = scored
                     .sort((a, b) => b.score - a.score)
-                    .slice(0, 5)
+                    .slice(0, 3)
                 setResults(topResults)
 
                 let contextText = topResults.map(r => r.text).join(' ')
@@ -53,11 +53,11 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
                     contextText = topResults.map(r => r.text).join(' ')
                 }
 
-                const prompt = `Context: ${contextText}\nQuestion: ${query}\nAnswer:`
+                const prompt = `Use the following context to answer the question briefly.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
                 const generatorOutput = await generator(prompt, {
-                    max_new_tokens: 120,
-                    repetition_penalty: 2.0,
-                    temperature: 0.5,
+                    max_new_tokens: 96,
+                    repetition_penalty: 1.5,
+                    temperature: 0.25,
                     do_sample: true
                 })
                 const cleanAnswer = generatorOutput[0]?.generated_text?.trim() || 'No information found.'
@@ -68,15 +68,10 @@ export function useSemanticSearch(query: string, kbData: KBEntry[]) {
             } finally {
                 setIsSearching(false)
             }
-        }, 600)
+        }, 750)
 
         return () => clearTimeout(timeoutId)
     }, [query, pipelines, kbData])
 
-    return {
-        answer,
-        results,
-        isSearching,
-        modelReady: !!pipelines
-    }
+    return { answer, results, isSearching, modelReady: !!pipelines }
 }

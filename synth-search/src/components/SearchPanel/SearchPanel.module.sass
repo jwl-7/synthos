@@ -5,7 +5,7 @@
     align-items: center
     gap: 1.5rem
     padding: 2.5rem 2rem
-    background: var(--glass-bg)
+    background: var(--glass-background)
     backdrop-filter: var(--glass-blur)
     border: var(--glass-border)
     border-radius: var(--radius-lg)
@@ -15,18 +15,46 @@
     font-size: 2.5rem
     font-weight: 700
     letter-spacing: 0.05em
-    background: var(--title-gradient)
-    background-clip: text
-    color: transparent
     margin: 0
     text-align: center
+    background: var(--title-gradient)
+    background-clip: text
+    color: var(--title-color)
 
-.tagline
-    text-align: center
-    font-size: 0.9rem
-    font-weight: 400
-    letter-spacing: 0.15em
-    text-transform: uppercase
+.toggleWrapper
+    position: relative
+    display: flex
+    padding: 4px
+    width: 240px
+    background: var(--toggle-wrapper-background)
+    border: var(--toggle-wrapper-border)
+    border-radius: 12px
+
+.toggleButton
+    flex: 1
+    z-index: 1
+    font-size: 0.8rem
+    font-weight: 600
+    padding: 8px 0
+    border: none
+    background: var(--toggle-button-background)
     color: var(--text-muted)
-    margin-top: 0.25rem
-    opacity: 0.8
+    cursor: pointer
+    transition: color 0.3s ease
+
+    &.active
+        color: white
+
+.slider
+    position: absolute
+    top: 4px
+    left: 4px
+    width: calc(50% - 4px)
+    height: calc(100% - 8px)
+    background: var(--slider-background)
+    border-radius: 8px
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+    pointer-events: none
+
+    &.right
+        transform: translateX(100%)

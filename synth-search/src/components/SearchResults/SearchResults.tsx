@@ -28,25 +28,26 @@ export default function SearchResults({ answer, results, isSearching }: SearchRe
                                 </span>
                             </div>
                         </div>
-
                         <div className={styles.answerContent}>
                             {answer}
                         </div>
 
-                        <div className={styles.debugSources}>
-                            <p className={styles.label}>Debug Output</p>
+                        <div className={styles.topMatches}>
+                            <p className={styles.topMatchesLabel}>Top Matches</p>
                             {results.slice(0, 3).map((result: any, i: number) => {
                                 const scorePercent = (result.score * 100).toFixed(0)
                                 const hue = Math.min(Math.max(Number(scorePercent) * 1.2, 0), 120)
                                 const scoreColor = `hsl(${hue}, 80%, 45%)`
                                 return (
-                                    <div key={i} className={styles.sourceItem}>
-                                        <span className={styles.matchLabel} style={{ color: scoreColor }}>
-                                            {scorePercent}% MATCH
-                                        </span>
-                                        <p className={styles.text}>
-                                            {result.text.substring(0, 120)}...
-                                        </p>
+                                    <div key={i} className={styles.topMatchesItem}>
+                                        <div className={styles.matchBadge} style={{ borderColor: scoreColor }}>
+                                            <span className={styles.matchLabel} style={{ color: scoreColor }}>
+                                                {scorePercent}% MATCH
+                                            </span>
+                                        </div>
+                                        <div className={styles.text}>
+                                            {result.text}
+                                        </div>
                                     </div>
                                 )
                             })}

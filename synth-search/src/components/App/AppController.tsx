@@ -4,12 +4,19 @@ import { useSemanticSearch } from '@/hooks/useSemanticSearch'
 import SearchPanel from '@/components/SearchPanel/SearchPanel'
 import SearchResults from '@/components/SearchResults/SearchResults'
 import clsx from 'clsx'
-import pdfKbData from '@/data/synthetic.json'
+import cookbookData from '@/data/synth-cookbook.json'
+import secretsData from '@/data/synth-secrets.json'
+
+const KB_SOURCES = {
+    cookbook: cookbookData as JSON,
+    secrets: secretsData as JSON
+}
 
 export default function AppController() {
     const [query, setQuery] = useState<string>('')
-    const kbData = pdfKbData as KBEntry[]
-    const { answer, results, isSearching, modelReady } = useSemanticSearch(query, kbData)
+    const [activeKB, setActiveKB] = useState<string>('cookbook')
+    const kbData = activeKB === 'cookbook' ? cookbookData : secretsData
+    const { answer, results, isSearching, modelReady } = useSemanticSearch(query, kbData as KBEntry[])
     const isActive = query.length > 0
 
     return (
@@ -19,6 +26,8 @@ export default function AppController() {
                     query={query}
                     onQueryChange={setQuery}
                     modelReady={modelReady}
+                    activeSource={activeKB}
+                    onSourceChange={setActiveKB}
                 />
                 <SearchResults
                     answer={answer}
