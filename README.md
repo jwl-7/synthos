@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="Demo" width="400" src="https://github.com/user-attachments/assets/f1122d51-ceef-4145-86ee-a026ea562b93" />
+    <img alt="Demo" width="728" src="https://github.com/user-attachments/assets/f1122d51-ceef-4145-86ee-a026ea562b93" />
 </div>
 
 # 🔍 synthos
