@@ -22,6 +22,7 @@ from colors import Color
 
 
 MODEL_NAME = 'all-mpnet-base-v2'
+LITE_MODE = False
 
 
 def select_pdf() -> str|None:
@@ -43,9 +44,12 @@ def select_pdf() -> str|None:
 
     return file_selection
 
-def select_json() -> str|None:
+def select_json(pdf_path: str) -> str|None:
     """Prompt user to select JSON export destination."""
     input(f'Press {Color.ENTER} to select {Color.JSON} export...')
+    pdf_filename = os.path.basename(pdf_path)
+    pdf_name = os.path.splitext(pdf_filename)[0]
+    pdf_dirname = os.path.dirname(pdf_path)
 
     root = tkinter.Tk()
     root.withdraw()
@@ -54,7 +58,8 @@ def select_json() -> str|None:
         title='Save Knowledge Base As',
         filetypes=[('JSON files', '*.json')],
         defaultextension='.json',
-        initialfile='pdf_kb.json'
+        initialfile=f'{pdf_name}.json',
+        initialdir=pdf_dirname
     )
     root.destroy()
 
@@ -98,16 +103,15 @@ def sentence_chunks(text: str) -> list[str]:
 
         chunks.append(chunk)
 
-    print(f'{Color.INFO} Filtered out {Color.CYAN}{len(raw_chunks) - len(chunks)}{Color.RESET} noise chunks.')
-    if not chunks: print(f'{Color.ERROR} No valid content found.')
     return chunks
 
 def vector_embeddings(chunks: list[str], model: SentenceTransformer) -> list[list[float]]:
     """Generates normalized vector embeddings from sentence chunks."""
     print(f'{Color.INFO} Found {Color.CYAN}{len(chunks)}{Color.RESET} chunks. Starting embedding...')
+    progress_bar_format = '{desc}: |{bar:40}| {n_fmt}/{total_fmt}'
     return [
         model.encode(sentences=chunk, normalize_embeddings=True).tolist()
-        for chunk in tqdm(chunks, desc='Encoding chunks', unit='chunk', bar_format='{desc}: |{bar:40}| {n_fmt}/{total_fmt}')
+        for chunk in tqdm(chunks, desc='Encoding chunks', unit='chunk', bar_format=progress_bar_format)
     ]
 
 def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
@@ -119,18 +123,18 @@ def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
 
     # extract text from pdf file
     raw_pdf = pymupdf.open(pdf_path)
-    raw_txt = pymupdf4llm.to_text(
+    raw_txt = cast(list[dict], pymupdf4llm.to_text(
         doc=raw_pdf,
         page_chunks=True,
         header=False,
         footer=False,
-        ignore_alpha=True,
         ignore_code=True,
         ignore_graphics=True,
         ignore_images=True
-    )
+    ))
 
-    for page in tqdm(raw_txt, desc='Processing pages', unit='page'):
+    progress_bar_format = '{desc}: |{bar:40}| {n_fmt}/{total_fmt}'
+    for page in tqdm(raw_txt, desc='Processing pages', unit='page', bar_format=progress_bar_format):
         page_txt = sanitize_text(page['text'])
 
         # empty page
@@ -149,6 +153,7 @@ def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
 
     # construct knowledge base with embeddings
     for i, (chunk, vector) in enumerate(zip(chunks, embeddings)):
+        if LITE_MODE: vector = [round(float(v), 5) for v in vector]
         knowledge_base.append({
             'id': f'{filename}_{i}',
             'text': chunk,
@@ -183,7 +188,7 @@ def main():
     """Does stuff."""
     print(f'{Color.GRAY}.:.:.: {Color.YELLOW}PDF PreProcessor {Color.GRAY}:.:.:.{Color.RESET}')
     pdf_file = select_pdf()
-    json_file = select_json() if pdf_file else None
+    json_file = select_json(pdf_file) if pdf_file else None
     model = load_model(MODEL_NAME) if json_file else None
     if pdf_file and json_file and model: build_kb(pdf_file, json_file, model)
     input(f'\nPress {Color.ENTER} to exit...')
