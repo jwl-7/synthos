@@ -66,41 +66,17 @@ def select_json() -> str|None:
 def sanitize_text(text: str) -> str:
     """Sanitizes raw text extracted from PDF."""
 
-    # remove page numbers & headers
-    text = re.sub(r'Page\s+\d+\s+of\s+\d+', '', text, flags=re.IGNORECASE)
-
-    # filter OCR markers and figure captions
-    artifacts_pattern = r'(-+\s*End of picture text\s*-+)|(Figure\s+\d+\.?)'
-    text = re.sub(artifacts_pattern, '', text, flags=re.IGNORECASE)
-
-    # remove tables and ASCII
-    table_noise = r'([|+\-]{3,})|(\|(\s+\|)+)|([_]{3,})'
-    text = re.sub(table_noise, ' ', text)
-
-    # remove table of contents dots
-    text = re.sub(r'\.{3,}', ' ', text)
-
-    # remove math/code symbols
-    text = re.sub(r'[<>=/\\*]{3,}', ' ', text)
-
     # de-hyphenate words split across lines
     text = re.sub(r'(\w+)-\s+(\w+)', r'\1\2', text)
-
-    # flatten whitespace
-    text = re.sub(r'\s+', ' ', text)
 
     # remove common PDF ligatures
     ligatures = {'ﬁ': 'fi', 'ﬂ': 'fl', 'ﬀ': 'ff', 'ﬃ': 'ffi', 'ﬄ': 'ffl'}
     for lig, rep in ligatures.items():
         text = text.replace(lig, rep)
 
-    # text is non-alphanumeric noise
-    if not re.search(r'[a-zA-Z0-9]', text): text = ''
-
     # clean whitespace
-    text = text.strip()
+    text = re.sub(r'\s+', ' ', text).strip()
 
-    if not text: print(f'{Color.ERROR} No valid content found.')
     return text
 
 def sentence_chunks(text: str) -> list[str]:
@@ -115,23 +91,9 @@ def sentence_chunks(text: str) -> list[str]:
         if len(chunk) < 40:
             continue
 
-        # not enough letters
-        alphas = sum(char.isalpha() for char in chunk)
-        if alphas / len(chunk) < 0.6:
-            continue
-
         # not enough real words
-        words = re.findall(r'\b[a-zA-Z]{3,}\b', chunk)
+        words = re.findall(r'\b[a-zA-Z]{2,}\b', chunk)
         if len(words) < 5:
-            continue
-
-        # image|OCR artifacts
-        if re.search(r'(Start of picture|End of picture|\[\d+\s*x\s*\d+\])', chunk, re.IGNORECASE):
-            continue
-
-        # too many symbols|pipes
-        symbol_count = sum(char in '|~•._:;[]{}' for char in chunk)
-        if symbol_count > len(chunk) * 0.15:
             continue
 
         chunks.append(chunk)
@@ -145,26 +107,42 @@ def vector_embeddings(chunks: list[str], model: SentenceTransformer) -> list[lis
     print(f'{Color.INFO} Found {Color.CYAN}{len(chunks)}{Color.RESET} chunks. Starting embedding...')
     return [
         model.encode(sentences=chunk, normalize_embeddings=True).tolist()
-        for chunk in tqdm(chunks, desc='Encoding', unit='chunk', bar_format='{desc}: |{bar:40}| {n_fmt}/{total_fmt}')
+        for chunk in tqdm(chunks, desc='Encoding chunks', unit='chunk', bar_format='{desc}: |{bar:40}| {n_fmt}/{total_fmt}')
     ]
 
 def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
     """Converts PDF -> JSON-serialized vector database."""
+    chunks = []
     knowledge_base = []
     filename = os.path.basename(pdf_path)
     print(f'{Color.INFO} Reading {Color.CYAN}{filename}{Color.RESET}...')
 
     # extract text from pdf file
     raw_pdf = pymupdf.open(pdf_path)
-    raw_txt = pymupdf4llm.to_text(raw_pdf)
+    raw_txt = pymupdf4llm.to_text(
+        doc=raw_pdf,
+        page_chunks=True,
+        header=False,
+        footer=False,
+        ignore_alpha=True,
+        ignore_code=True,
+        ignore_graphics=True,
+        ignore_images=True
+    )
 
-    # sanitize content
-    txt = sanitize_text(cast(str, raw_txt))
-    if not txt: return
+    for page in tqdm(raw_txt, desc='Processing pages', unit='page'):
+        page_txt = sanitize_text(page['text'])
 
-    # chunk text into sentences
-    chunks = sentence_chunks(txt)
-    if not chunks: return
+        # empty page
+        if not page_txt or not re.search(r'[a-zA-Z0-9]', page_txt):
+            continue
+
+        page_chunks = sentence_chunks(page_txt)
+        chunks.extend(page_chunks)
+
+    if not chunks:
+        print(f'{Color.ERROR} No valid content found.')
+        return
 
     # generate normalized vector embeddings
     embeddings = vector_embeddings(chunks, model)
