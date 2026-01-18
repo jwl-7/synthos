@@ -175,8 +175,8 @@ def build_kb(pdf_path: str, json_path: str, model: SentenceTransformer):
     # knowledge base constructed
     output_filename = os.path.basename(json_path)
     print(
-        f'\n{Color.SUCCESS} Processed {Color.CYAN}{output_filename}{Color.RESET} '
-        f'-> {Color.CYAN}{filename}{Color.RESET}'
+        f'\n{Color.SUCCESS} Processed {Color.CYAN}{filename}{Color.RESET} '
+        f'-> {Color.CYAN}{output_filename}{Color.RESET}'
     )
 
 def load_model(model_name: str) -> SentenceTransformer|None:
