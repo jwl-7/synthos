@@ -52,12 +52,11 @@ export function useSemanticSearch(query: string, kbData: KbData[]) {
 
                 const prompt = `Answer the question using only the context provided. Be concise and accurate.\nContext: ${contextText}\nQuestion: ${query}\nAnswer:`
                 const generatorOutput = await generator(prompt, {
-                    max_new_tokens: 64,
-                    temperature: 0.7,
+                    max_new_tokens: 128,
+                    temperature: 0.45,
                     do_sample: true,
-                    top_p: 0.9,
-                    repetition_penalty: 1.2,
-                    no_repeat_ngram_size: 3,
+                    top_p: 0.92,
+                    repetition_penalty: 1.1,
                 })
                 const cleanAnswer = generatorOutput[0]?.generated_text?.trim() || 'No information found.'
                 setAnswer(cleanAnswer)
