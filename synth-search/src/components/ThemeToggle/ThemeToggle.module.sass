@@ -2,16 +2,16 @@
     position: relative
     display: flex
     align-items: center
+    z-index: 1
     padding: 4px
     width: 120px
     height: 36px
-    background: var(--search-toggle-wrapper-bg)
-    border: 1px solid var(--search-toggle-wrapper-border)
+    background: var(--toggle-wrapper-bg)
+    border: 1px solid var(--toggle-wrapper-border)
     border-radius: 8px
+    appearance: none
     cursor: pointer
     transition: background 0.3s ease, border-color 0.3s ease
-    appearance: none
-    -webkit-appearance: none
 
     &:active
         padding: 4px
@@ -30,53 +30,49 @@
 
 .themeToggleSlider
     position: absolute
+    z-index: 3
     top: 4px
     left: 4px
     bottom: 4px
     width: calc(50% - 4px)
-    background: var(--search-toggle-slider-bg)
+    background: var(--toggle-slider-bg)
     border-radius: 6px
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
     pointer-events: none
-    z-index: 1
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
 
 .themeIcon
-    flex: 1
-    z-index: 2
     display: flex
     align-items: center
     justify-content: center
+    flex: 1
+    z-index: 2
     height: 100%
     pointer-events: none
     transition: opacity 0.3s ease
 
     svg
-        width: 18px
-        height: 18px
+        height: 24px
+        width: 24px
         transition: all 0.3s ease
 
-.sun
-    svg
-        fill: none
-        stroke: var(--search-toggle-button-text)
-        stroke-width: 2
-        stroke-linecap: round
-        stroke-linejoin: round
-        filter: drop-shadow(0 0 0 transparent)
-        transition: all 0.3s ease
+.sun svg
+    fill: none
+    filter: drop-shadow(0 0 0 transparent)
+    stroke: var(--toggle-button-text)
+    stroke-width: 2
+    stroke-linecap: round
+    stroke-linejoin: round
+    transition: all 0.3s ease
 
-    .themeToggleWrapper:not(.dark) &
-        svg
-            stroke: var(--search-toggle-button-text-active)
-            filter: drop-shadow(0 0 6px var(--blue-accent))
+    .themeToggleWrapper:not(.dark) .themeToggleSlider svg
+        stroke: var(--toggle-button-text-active)
+        filter: drop-shadow(0 0 6px var(--blue-accent))
 
-.moon
-    svg
-        fill: var(--search-toggle-button-text)
-        filter: drop-shadow(0 0 0 transparent)
-        transition: all 0.3s ease
+.moon svg
+    fill: var(--toggle-button-text)
+    filter: drop-shadow(0 0 0 transparent)
+    transition: all 0.3s ease
 
-    .themeToggleWrapper.dark &
-        svg
-            fill: var(--search-toggle-button-text-active)
-            filter: drop-shadow(0 0 6px var(--purple-accent))
+    .themeToggleWrapper.dark .themeToggleSlider svg
+        fill: var(--toggle-button-text-active)
+        filter: drop-shadow(0 0 6px var(--purple-accent))

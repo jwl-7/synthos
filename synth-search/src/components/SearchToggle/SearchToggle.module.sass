@@ -3,8 +3,8 @@
     display: flex
     padding: 4px
     width: 240px
-    background: var(--search-toggle-wrapper-bg)
-    border: 1px solid var(--search-toggle-wrapper-border)
+    background: var(--toggle-wrapper-bg)
+    border: 1px solid var(--toggle-wrapper-border)
     border-radius: 12px
 
 .searchToggleSlider
@@ -13,7 +13,7 @@
     left: 4px
     width: calc(50% - 4px)
     height: calc(100% - 8px)
-    background: var(--search-toggle-slider-bg)
+    background: var(--toggle-slider-bg)
     border-radius: 8px
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
     pointer-events: none
@@ -24,15 +24,15 @@
 .searchToggleButton
     flex: 1
     z-index: 1
-    font-family: var(--search-toggle-button-font-family)
-    font-size: var(--search-toggle-button-font-size)
-    font-weight: var(--search-toggle-button-font-weight)
+    font-family: var(--toggle-button-font-family)
+    font-size: var(--toggle-button-font-size)
+    font-weight: var(--toggle-button-font-weight)
     padding: 8px 0
     border: none
-    background: var(--search-toggle-button-bg)
-    color: var(--search-toggle-button-text)
+    background: var(--toggle-button-bg)
+    color: var(--toggle-button-text)
     cursor: pointer
     transition: color 0.3s ease
 
     &.active
-        color: var(--search-toggle-button-text-active)
+        color: var(--toggle-button-text-active)
