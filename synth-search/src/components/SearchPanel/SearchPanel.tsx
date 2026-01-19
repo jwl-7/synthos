@@ -1,6 +1,7 @@
 import styles from './SearchPanel.module.sass'
 import SearchBar from '@/components/SearchBar/SearchBar'
 import SearchToggle from '@/components/SearchToggle/SearchToggle'
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 
 interface SearchPanelProps {
     query: string
@@ -20,6 +21,7 @@ export default function SearchPanel({
     return (
         <div className={styles.searchPanel}>
             <h1 className={styles.title}>Synthos</h1>
+            <ThemeToggle />
             <SearchToggle
                 activeSource={activeSource}
                 onSourceChange={onSourceChange}
