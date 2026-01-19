@@ -33,9 +33,10 @@ export default function ThemeToggle() {
         <button
             className={clsx(styles.themeToggleWrapper, theme === 'dark' && styles.dark)}
             onClick={handleThemeChange}
+            type="button"
             aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
-            role="switch"
             aria-checked={theme === 'dark'}
+            role="switch"
         >
             <div className={styles.themeToggleSlider} />
             <div className={clsx(styles.themeIcon, styles.sun)}>
