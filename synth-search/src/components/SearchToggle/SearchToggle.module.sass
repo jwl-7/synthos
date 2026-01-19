@@ -6,6 +6,10 @@
     background: var(--toggle-wrapper-bg)
     border: 1px solid var(--toggle-wrapper-border)
     border-radius: 12px
+    cursor: pointer // Added for the whole area
+    appearance: none // Reset button styles
+    -webkit-appearance: none
+    outline: none
 
 .searchToggleSlider
     position: absolute
@@ -28,10 +32,9 @@
     font-size: var(--toggle-button-font-size)
     font-weight: var(--toggle-button-font-weight)
     padding: 8px 0
-    border: none
-    background: var(--toggle-button-bg)
+    text-align: center
     color: var(--toggle-button-text)
-    cursor: pointer
+    pointer-events: none
     transition: color 0.3s ease
 
     &.active

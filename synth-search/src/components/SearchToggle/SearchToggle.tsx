@@ -7,21 +7,20 @@ interface SearchToggleProps {
 }
 
 export default function SearchToggle({ activeSource, onSourceChange }: SearchToggleProps) {
+    const isSecrets = activeSource === 'secrets'
     return (
-        <div className={styles.searchToggleWrapper}>
-            <div className={clsx(styles.searchToggleSlider, activeSource === 'secrets' && styles.right)} />
-            <button
-                className={clsx(styles.searchToggleButton, activeSource === 'cookbook' && styles.active)}
-                onClick={() => onSourceChange('cookbook')}
-            >
+        <button
+            className={styles.searchToggleWrapper}
+            onClick={() => onSourceChange(isSecrets ? 'cookbook' : 'secrets')}
+            type="button"
+        >
+            <div className={clsx(styles.searchToggleSlider, isSecrets && styles.right)} />
+            <span className={clsx(styles.searchToggleButton, !isSecrets && styles.active)}>
                 Cookbook
-            </button>
-            <button
-                className={clsx(styles.searchToggleButton, activeSource === 'secrets' && styles.active)}
-                onClick={() => onSourceChange('secrets')}
-            >
+            </span>
+            <span className={clsx(styles.searchToggleButton, isSecrets && styles.active)}>
                 Secrets
-            </button>
-        </div>
+            </span>
+        </button>
     )
 }
