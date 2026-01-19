@@ -5,7 +5,7 @@ import Moon from './Moon'
 import Sun from './Sun'
 
 export default function ThemeToggle() {
-    const [theme, setTheme] = useState<string>('light')
+    const [theme, setTheme] = useState<string>('dark')
 
     const handleThemeChange = () => {
         if (typeof window === 'undefined') return
@@ -23,7 +23,7 @@ export default function ThemeToggle() {
 
         const stored = localStorage.getItem('theme')
         const initial = document.documentElement.getAttribute('data-theme')
-        const themeChoice = (stored || initial || 'light') as 'light' | 'dark'
+        const themeChoice = (stored || initial || 'dark')
 
         setTheme(themeChoice)
         document.documentElement.setAttribute('data-theme', themeChoice)

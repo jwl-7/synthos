@@ -1,4 +1,45 @@
-[data-theme=light]
+:root
+    --blue-accent: #38bdf8
+    --purple-accent: #a78bfa
+    --text-muted: #888
+    --text-primary: #e5e7eb
+    --text-secondary: #9ca3af
+    --font-family: satoshi, system-ui, Roboto, sans-serif
+    --font-size: 1rem
+    --font-weight: 400
+    --line-height: 1.5
+    --answer-font-family: var(--font-family)
+    --answer-font-size: var(--font-size)
+    --search-bar-border-focus: var(--blue-accent)
+    --search-bar-font-family: var(--font-family)
+    --search-bar-font-size: var(--font-size)
+    --search-bar-placeholder: var(--text-secondary)
+    --search-results-blur: blur(20px)
+    --search-results-font-family: var(--font-family)
+    --toggle-button-bg: transparent
+    --toggle-button-font-family: var(--font-family)
+    --toggle-button-font-size: var(--font-size)
+    --toggle-button-font-weight: 600
+    --toggle-button-text: var(--text-muted)
+    --toggle-button-text-active: white
+    --score-bar-tooltip-font-size: 0.75rem
+    --title-text: transparent
+    --title-font-family: neometric, system-ui
+    --title-font-size: 4.5rem
+    --title-font-weight: 700
+    --title-line-height: 1em
+    --title-gradient: linear-gradient(135deg, var(--blue-accent), var(--purple-accent))
+    --sun-fill: #FFD866
+    --moon-fill: #B496FF
+    --sun-glow: drop-shadow(0 0 8px rgba(255, 215, 102, 0.6))
+    --moon-glow: drop-shadow(0 0 8px rgba(180, 150, 255, 0.6))
+
+[data-theme=dark]
+    --bg-image: url('@/images/bg-city-night-skate.webp')
+    --score-bar-bg: rgba(255, 255, 255, 0.1)
+    --score-bar-tooltip-bg: rgba(255, 255, 255, 0.1)
+    --score-bar-tooltip-blur: blur(32px)
+    --score-bar-tooltip-border: rgba(255, 255, 255, 0.2)
     --search-bar-bg: rgba(255, 255, 255, 0.03)
     --search-bar-bg-focus: rgba(255, 255, 255, 0.05)
     --search-bar-border: rgba(255, 255, 255, 0.08)
@@ -23,14 +64,40 @@
     --toggle-slider-bg: rgba(255, 255, 255, 0.1)
     --toggle-wrapper-bg: rgba(0, 0, 0, 0.2)
     --toggle-wrapper-border: rgba(255, 255, 255, 0.05)
-    --score-bar-bg: rgba(255, 255, 255, 0.1)
-    --score-bar-tooltip-bg: rgba(255, 255, 255, 0.1)
-    --score-bar-tooltip-blur: blur(32px)
-    --score-bar-tooltip-border: rgba(255, 255, 255, 0.2)
-    --score-bar-tooltip-font-size: 0.75rem
     --top-matches-border: rgba(255, 255, 255, 0.08)
     --top-matches-label: rgba(255, 255, 255, 0.65)
-    color-scheme: light
-
-[data-theme=dark]
     color-scheme: dark
+
+[data-theme=light]
+    --bg-image: url('@/images/bg-city-day-skate.webp')
+    --score-bar-bg: rgba(0, 0, 0, 0.3)
+    --score-bar-tooltip-bg: rgba(20, 20, 20, 0.6)
+    --score-bar-tooltip-blur: blur(32px)
+    --score-bar-tooltip-border: rgba(255, 255, 255, 0.1)
+    --search-bar-bg: rgba(0, 0, 0, 0.2)
+    --search-bar-bg-focus: rgba(0, 0, 0, 0.4)
+    --search-bar-border: rgba(255, 255, 255, 0.1)
+    --search-bar-border-focus: var(--blue-accent)
+    --search-bar-box-shadow-focus: rgba(56, 189, 248, 0.2)
+    --search-bar-placeholder: var(--text-secondary)
+    --search-panel-bg: rgba(15, 15, 15, 0.4)
+    --search-panel-blur: blur(25px)
+    --search-panel-border: rgba(255, 255, 255, 0.08)
+    --search-panel-border-hover: rgba(255, 255, 255, 0.15)
+    --search-panel-box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6)
+    --search-panel-box-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.8)
+    --search-results-bg: rgba(10, 10, 10, 0.3)
+    --search-results-blur: blur(20px)
+    --search-results-border: rgba(255, 255, 255, 0.08)
+    --search-results-border-hover: rgba(255, 255, 255, 0.15)
+    --search-results-box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.4)
+    --search-results-box-shadow-hover: 0 8px 25px 0 rgba(0, 0, 0, 0.6)
+    --toggle-button-bg: transparent
+    --toggle-button-text: var(--text-muted)
+    --toggle-button-text-active: white
+    --toggle-slider-bg: rgba(255, 255, 255, 0.15)
+    --toggle-wrapper-bg: rgba(0, 0, 0, 0.4)
+    --toggle-wrapper-border: rgba(255, 255, 255, 0.05)
+    --top-matches-border: rgba(255, 255, 255, 0.05)
+    --top-matches-label: rgba(255, 255, 255, 0.45)
+    color-scheme: light
